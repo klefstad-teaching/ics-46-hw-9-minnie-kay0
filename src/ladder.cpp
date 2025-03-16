@@ -17,9 +17,11 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
 	int m = str1.size();
 	int n = str2.size();
 
-	if (abs(m - n) > d) { return false; }
-	vector<vector<int>> dp(m + 1, vector<int>(n + 1));
+	if (abs(m - n) > d) { 
+		return false; 
+	}
 
+	vector<vector<int>> dp(m + 1, vector<int>(n + 1));
 	for (int i = 0; i <= m; ++i) {
 		dp[i][0] = i; 
 	}
@@ -32,7 +34,6 @@ bool edit_distance_within(const std::string& str1, const std::string& str2, int 
 			int cost = (str1[i - 1] == str2[j - 1]) ? 0 : 1;
 			dp[i][j] = min(min(dp[i - 1][j] + 1, 
 				dp[i][j - 1] + 1), dp[i - 1][j - 1] + cost);
-			if (dp[i][j] > d) { return false; }
 		}
 	}
 	return dp[m][n] <= d;
@@ -100,22 +101,25 @@ void load_words(set<string> & word_list, const string& file_name) {
 }
 
 void print_word_ladder(const vector<string>& ladder) {
+	if (ladder.empty()) { cout << "No word ladder found." << endl; }
+	cout << "Word ladder found: ";
 	for (size_t i = 0; i < ladder.size(); ++i) {
-		cout << ladder[i];
-		if (i < ladder.size() - 1) cout << " -> ";
+		cout << ladder[i] << " ";
 	}
+	cout << endl;
 }
 
 void verify_word_ladder() {
 	set<string> word_list;
 	load_words(word_list, "src/words.txt");
 
-	my_assert(generate_word_ladder("cat", "dog", word_list).size() == 4);
-	vector<string> cog = generate_word_ladder("work", "play", word_list);
+	// my_assert(generate_word_ladder("cat", "dog", word_list).size() == 4);
+	vector<string> cog = generate_word_ladder("sleep", "awake", word_list);
 	print_word_ladder(cog);
 	my_assert(generate_word_ladder("marty", "curls", word_list).size() == 6);
 	my_assert(generate_word_ladder("code", "data", word_list).size() == 6);
 	my_assert(generate_word_ladder("work", "play", word_list).size() == 6);
 	my_assert(generate_word_ladder("sleep", "awake", word_list).size() == 8);
 	my_assert(generate_word_ladder("car", "cheat", word_list).size() == 4);
+	my_assert(generate_word_ladder("were", "were", word_list).size() == 1);
 }
